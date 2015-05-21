@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import com.geeks.mylocker.R;
 
 public class FullPhotoViewActivity extends Activity {
 

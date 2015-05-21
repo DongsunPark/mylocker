@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.geeks.mylocker.R;
+
 public class AlarmNotificationReceiver extends BroadcastReceiver {
 	// Notification ID to allow for future updates
 	private static final int MY_NOTIFICATION_ID = 1;

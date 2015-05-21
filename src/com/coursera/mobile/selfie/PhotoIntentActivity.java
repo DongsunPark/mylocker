@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.coursera.mobile.selfie.storage.AlbumStorageDirFactory;
 import com.coursera.mobile.selfie.storage.BaseAlbumDirFactory;
 import com.coursera.mobile.selfie.storage.FroyoAlbumDirFactory;
+import com.geeks.mylocker.R;
 
 
 public class PhotoIntentActivity extends ListActivity {

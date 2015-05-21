@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Daily Selfie</string>
+    <string name="cannot">Cannot</string>
+    <string name="album_name">DailySelfie</string>
+    <string name="camera">Camera</string>
+    <string name="photo_desc_string">photo</string>
+    <string name="title_activity_full_photo_view">FullPhotoViewActivity</string>
+
+</resources>

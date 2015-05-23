@@ -4,19 +4,22 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.geeks.mylocker.R;
+import com.geeks.mylocker.dao.Group;
+import com.geeks.mylocker.fragment.AddRecordFragment;
+import com.geeks.mylocker.fragment.BlankFragment;
+import com.geeks.mylocker.fragment.ItemFragment;
 import com.geeks.mylocker.fragment.NavigationDrawerFragment;
+import com.geeks.mylocker.fragment.OnFragmentInteractionListener;
 
 public class MainActivity extends Activity implements
-		NavigationDrawerFragment.NavigationDrawerCallbacks {
+		NavigationDrawerFragment.NavigationDrawerCallbacks, OnFragmentInteractionListener {
 
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the
@@ -50,23 +53,38 @@ public class MainActivity extends Activity implements
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getFragmentManager();
+		
+		Fragment fragment = null;
+		
+		switch (position) {
+			case 0: 
+				Group group = new Group();
+				fragment = AddRecordFragment.newInstance(group);
+				break;
+			case 1: 
+				fragment = ItemFragment.newInstance("options1","options2");
+				break;
+			default: 
+				fragment = BlankFragment.newInstance("options1","options2");
+					
+		}
+		
 		fragmentManager
 				.beginTransaction()
-				.replace(R.id.container,
-						PlaceholderFragment.newInstance(position + 1)).commit();
+				.replace(R.id.container, fragment).commit();
 	}
 
 	public void onSectionAttached(int number) {
 		switch (number) {
-		case 1:
-			mTitle = getString(R.string.title_section1);
-			break;
-		case 2:
-			mTitle = getString(R.string.title_section2);
-			break;
-		case 3:
-			mTitle = getString(R.string.title_section3);
-			break;
+			case 1:
+				mTitle = getString(R.string.title_section1);
+				break;
+			case 2:
+				mTitle = getString(R.string.title_section2);
+				break;
+			case 3:
+				mTitle = getString(R.string.title_section3);
+				break;
 		}
 	}
 
@@ -96,50 +114,34 @@ public class MainActivity extends Activity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		int position = 0;
+		switch(id) {
+			case R.id.action_add :
+				position = 0;
+				break;
+			case R.id.action_list :
+				position =1;
+				break;
+			case R.id.action_settings:
+				position =2;
+				break;
+			default: position =2;	
 		}
+		
+		onNavigationDrawerItemSelected(position);
+		
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		private static final String ARG_SECTION_NUMBER = "section_number";
-
-		/**
-		 * Returns a new instance of this fragment for the given section number.
-		 */
-		public static PlaceholderFragment newInstance(int sectionNumber) {
-			PlaceholderFragment fragment = new PlaceholderFragment();
-			Bundle args = new Bundle();
-			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-			fragment.setArguments(args);
-			return fragment;
-		}
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
-
-		@Override
-		public void onAttach(Activity activity) {
-			super.onAttach(activity);
-			((MainActivity) activity).onSectionAttached(getArguments().getInt(
-					ARG_SECTION_NUMBER));
-		}
+	@Override
+	public void onFragmentInteraction(Uri uri) {
+		// TODO Auto-generated method stub
+		
 	}
 
+	@Override
+	public void onFragmentInteraction(String id) {
+		// TODO Auto-generated method stub
+		
+	}
 }

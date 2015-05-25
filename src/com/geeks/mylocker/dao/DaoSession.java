@@ -9,11 +9,11 @@ import de.greenrobot.dao.AbstractDaoSession;
 import de.greenrobot.dao.identityscope.IdentityScopeType;
 import de.greenrobot.dao.internal.DaoConfig;
 
-import com.geeks.mylocker.dao.Group;
+import com.geeks.mylocker.dao.Folder;
 import com.geeks.mylocker.dao.Record;
 import com.geeks.mylocker.dao.Field;
 
-import com.geeks.mylocker.dao.GroupDao;
+import com.geeks.mylocker.dao.FolderDao;
 import com.geeks.mylocker.dao.RecordDao;
 import com.geeks.mylocker.dao.FieldDao;
 
@@ -26,11 +26,11 @@ import com.geeks.mylocker.dao.FieldDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig groupDaoConfig;
+    private final DaoConfig folderDaoConfig;
     private final DaoConfig recordDaoConfig;
     private final DaoConfig fieldDaoConfig;
 
-    private final GroupDao groupDao;
+    private final FolderDao folderDao;
     private final RecordDao recordDao;
     private final FieldDao fieldDao;
 
@@ -38,8 +38,8 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        groupDaoConfig = daoConfigMap.get(GroupDao.class).clone();
-        groupDaoConfig.initIdentityScope(type);
+        folderDaoConfig = daoConfigMap.get(FolderDao.class).clone();
+        folderDaoConfig.initIdentityScope(type);
 
         recordDaoConfig = daoConfigMap.get(RecordDao.class).clone();
         recordDaoConfig.initIdentityScope(type);
@@ -47,23 +47,23 @@ public class DaoSession extends AbstractDaoSession {
         fieldDaoConfig = daoConfigMap.get(FieldDao.class).clone();
         fieldDaoConfig.initIdentityScope(type);
 
-        groupDao = new GroupDao(groupDaoConfig, this);
+        folderDao = new FolderDao(folderDaoConfig, this);
         recordDao = new RecordDao(recordDaoConfig, this);
         fieldDao = new FieldDao(fieldDaoConfig, this);
 
-        registerDao(Group.class, groupDao);
+        registerDao(Folder.class, folderDao);
         registerDao(Record.class, recordDao);
         registerDao(Field.class, fieldDao);
     }
     
     public void clear() {
-        groupDaoConfig.getIdentityScope().clear();
+        folderDaoConfig.getIdentityScope().clear();
         recordDaoConfig.getIdentityScope().clear();
         fieldDaoConfig.getIdentityScope().clear();
     }
 
-    public GroupDao getGroupDao() {
-        return groupDao;
+    public FolderDao getFolderDao() {
+        return folderDao;
     }
 
     public RecordDao getRecordDao() {

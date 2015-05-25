@@ -4,13 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical" > 
 
+    <Button
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="Save"
+			android:id="@+id/buttonAdd"
+			android:onClick="onSaveButtonClick"></Button>
+    
     <EditText
-        android:id="@+id/ui_add_record_group_name"
+        android:id="@+id/ui_add_record_folder_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="@string/add_record_group_name"
+        android:hint="@string/add_record_folder_name"
         android:inputType="text" >
     </EditText>
     <EditText

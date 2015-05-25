@@ -8,7 +8,7 @@ import android.util.Log;
 import de.greenrobot.dao.AbstractDaoMaster;
 import de.greenrobot.dao.identityscope.IdentityScopeType;
 
-import com.geeks.mylocker.dao.GroupDao;
+import com.geeks.mylocker.dao.FolderDao;
 import com.geeks.mylocker.dao.RecordDao;
 import com.geeks.mylocker.dao.FieldDao;
 
@@ -21,14 +21,14 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
-        GroupDao.createTable(db, ifNotExists);
+        FolderDao.createTable(db, ifNotExists);
         RecordDao.createTable(db, ifNotExists);
         FieldDao.createTable(db, ifNotExists);
     }
     
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
-        GroupDao.dropTable(db, ifExists);
+        FolderDao.dropTable(db, ifExists);
         RecordDao.dropTable(db, ifExists);
         FieldDao.dropTable(db, ifExists);
     }
@@ -62,7 +62,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(SQLiteDatabase db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(GroupDao.class);
+        registerDaoClass(FolderDao.class);
         registerDaoClass(RecordDao.class);
         registerDaoClass(FieldDao.class);
     }

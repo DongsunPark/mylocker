@@ -30,13 +30,13 @@ public class RecordDao extends AbstractDao<Record, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Created_date = new Property(2, java.util.Date.class, "created_date", false, "CREATED_DATE");
-        public final static Property GroupId = new Property(3, long.class, "groupId", false, "GROUP_ID");
+        public final static Property CreatedDate = new Property(2, java.util.Date.class, "createdDate", false, "CREATED_DATE");
+        public final static Property FolderId = new Property(3, long.class, "folderId", false, "FOLDER_ID");
     };
 
     private DaoSession daoSession;
 
-    private Query<Record> group_RecordsQuery;
+    private Query<Record> folder_RecordsQuery;
 
     public RecordDao(DaoConfig config) {
         super(config);
@@ -53,8 +53,8 @@ public class RecordDao extends AbstractDao<Record, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'RECORD' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'NAME' TEXT NOT NULL ," + // 1: name
-                "'CREATED_DATE' INTEGER," + // 2: created_date
-                "'GROUP_ID' INTEGER NOT NULL );"); // 3: groupId
+                "'CREATED_DATE' INTEGER," + // 2: createdDate
+                "'FOLDER_ID' INTEGER NOT NULL );"); // 3: folderId
     }
 
     /** Drops the underlying database table. */
@@ -74,11 +74,11 @@ public class RecordDao extends AbstractDao<Record, Long> {
         }
         stmt.bindString(2, entity.getName());
  
-        java.util.Date created_date = entity.getCreated_date();
-        if (created_date != null) {
-            stmt.bindLong(3, created_date.getTime());
+        java.util.Date createdDate = entity.getCreatedDate();
+        if (createdDate != null) {
+            stmt.bindLong(3, createdDate.getTime());
         }
-        stmt.bindLong(4, entity.getGroupId());
+        stmt.bindLong(4, entity.getFolderId());
     }
 
     @Override
@@ -99,8 +99,8 @@ public class RecordDao extends AbstractDao<Record, Long> {
         Record entity = new Record( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // created_date
-            cursor.getLong(offset + 3) // groupId
+            cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // createdDate
+            cursor.getLong(offset + 3) // folderId
         );
         return entity;
     }
@@ -110,8 +110,8 @@ public class RecordDao extends AbstractDao<Record, Long> {
     public void readEntity(Cursor cursor, Record entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.getString(offset + 1));
-        entity.setCreated_date(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
-        entity.setGroupId(cursor.getLong(offset + 3));
+        entity.setCreatedDate(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
+        entity.setFolderId(cursor.getLong(offset + 3));
      }
     
     /** @inheritdoc */
@@ -137,18 +137,18 @@ public class RecordDao extends AbstractDao<Record, Long> {
         return true;
     }
     
-    /** Internal query to resolve the "records" to-many relationship of Group. */
-    public List<Record> _queryGroup_Records(long groupId) {
+    /** Internal query to resolve the "records" to-many relationship of Folder. */
+    public List<Record> _queryFolder_Records(long folderId) {
         synchronized (this) {
-            if (group_RecordsQuery == null) {
+            if (folder_RecordsQuery == null) {
                 QueryBuilder<Record> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.GroupId.eq(null));
+                queryBuilder.where(Properties.FolderId.eq(null));
                 queryBuilder.orderRaw("CREATED_DATE ASC");
-                group_RecordsQuery = queryBuilder.build();
+                folder_RecordsQuery = queryBuilder.build();
             }
         }
-        Query<Record> query = group_RecordsQuery.forCurrentThread();
-        query.setParameter(0, groupId);
+        Query<Record> query = folder_RecordsQuery.forCurrentThread();
+        query.setParameter(0, folderId);
         return query.list();
     }
 
@@ -159,9 +159,9 @@ public class RecordDao extends AbstractDao<Record, Long> {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getGroupDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T0", daoSession.getFolderDao().getAllColumns());
             builder.append(" FROM RECORD T");
-            builder.append(" LEFT JOIN GROUP T0 ON T.'GROUP_ID'=T0.'_id'");
+            builder.append(" LEFT JOIN FOLDER T0 ON T.'FOLDER_ID'=T0.'_id'");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -172,9 +172,9 @@ public class RecordDao extends AbstractDao<Record, Long> {
         Record entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
-        Group group = loadCurrentOther(daoSession.getGroupDao(), cursor, offset);
-         if(group != null) {
-            entity.setGroup(group);
+        Folder folder = loadCurrentOther(daoSession.getFolderDao(), cursor, offset);
+         if(folder != null) {
+            entity.setFolder(folder);
         }
 
         return entity;    

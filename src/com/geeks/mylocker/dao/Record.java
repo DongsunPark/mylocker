@@ -13,6 +13,10 @@ public class Record {
     private Long id;
     /** Not-null value. */
     private String name;
+    /** Not-null value. */
+    private String userId;
+    /** Not-null value. */
+    private String userPassword;
     private java.util.Date createdDate;
     private long folderId;
 
@@ -34,9 +38,11 @@ public class Record {
         this.id = id;
     }
 
-    public Record(Long id, String name, java.util.Date createdDate, long folderId) {
+    public Record(Long id, String name, String userId, String userPassword, java.util.Date createdDate, long folderId) {
         this.id = id;
         this.name = name;
+        this.userId = userId;
+        this.userPassword = userPassword;
         this.createdDate = createdDate;
         this.folderId = folderId;
     }
@@ -63,6 +69,26 @@ public class Record {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /** Not-null value. */
+    public String getUserId() {
+        return userId;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    /** Not-null value. */
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public java.util.Date getCreatedDate() {

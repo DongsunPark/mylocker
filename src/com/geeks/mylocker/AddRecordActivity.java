@@ -21,15 +21,26 @@ public class AddRecordActivity extends Activity {
 
 	protected final String TAG = getClass().getSimpleName();
 	
-	private Folder parent = null;
+	private Folder folder = null;
 	DataSource ds;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_record);
+
 		ds = new DataSource();
 		ds.setup(this);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			Long id = extras.getLong(ListFolderActivity.FOLDER_ID_SELECTED);
+			folder = ds.getFolderDao().load(id);
+			if(folder !=null) {
+				EditText uiFolderName = (EditText)this.findViewById(R.id.ui_add_record_folder_name);
+				uiFolderName.setText(folder.getName());
+			}
+		}
 	}
 
 	@Override
@@ -53,30 +64,38 @@ public class AddRecordActivity extends Activity {
 		EditText uiPassword = (EditText)findViewById(R.id.ui_add_record_user_password);
 		
 		String folderName = uiFolderName.getText().toString();
+		if(folder == null || !folder.getName().equalsIgnoreCase(folderName)) {
+			folder = new Folder(null, folderName, new Date());
+			ds.getDaoSession().getFolderDao().insert(folder);
+			Log.d(TAG, "Inserted new folder, ID: " + folder.getId());
+		}
+		
 		String recordName = uiRecordName.getText().toString();
 		String userId = uiUserId.getText().toString();
 		String password = uiPassword.getText().toString();
 		
-		
-		addNote();
+		Record record = new Record(null, recordName, userId, password, new Date(),folder.getId());
+		ds.getDaoSession().getRecordDao().insert(record);
+		Log.d(TAG, "Inserted new record, ID: " + record.getId());
+		//addNote();
 	}
 
 	private void addNote() {
 
-		DaoSession sesson = ds.getDaoMaster().newSession();
+		/*DaoSession sesson = ds.getDaoMaster().newSession();
 		//ds.getDb().beginTransaction();
 		final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-				DateFormat.MEDIUM);
+				DateFormat.MEDIUM);*/
 		
 		/*String comment = "Added on " + df.format(new Date());
 		daoSession.getFolderDao().createTable(db, true);*/
 		
-		Folder folder = new Folder(null, "group1", new Date());
+		/*folder = new Folder(null, "group1", new Date());
 		sesson.getFolderDao().insert(folder);
-		Log.d(TAG, "Inserted new folder, ID: " + folder.getId());
+		Log.d(TAG, "Inserted new folder, ID: " + folder.getId());*/
 		
 
-		Record record = new Record(null, "record1", new Date(),14L);
+		/*Record record = new Record(null, "record1", new Date(),14L);
 		sesson.getRecordDao().insert(record);
 		Log.d(TAG, "Inserted new record, ID: " + record.getId());
 		
@@ -85,6 +104,8 @@ public class AddRecordActivity extends Activity {
 		Log.d(TAG, "Inserted new field, ID: " + field.getId());
 		//cursor.requery();*/
 		//ds.getDb().releaseReference();
-		//ds.getDb().endTransaction();
+		//ds.getDb().endTransaction();*/
 	}
+
+	
 }

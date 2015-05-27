@@ -81,6 +81,14 @@ public class ListFolderActivity extends ListActivity {
 		Log.d(TAG,"Resumed");
 		cursor.requery();
 	}
+	
+	
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		//if(cursor !=null)  cursor.close();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

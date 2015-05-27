@@ -9,10 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.geeks.mylocker.adapter.RecordListAdapter;
 import com.geeks.mylocker.dao.Folder;
 import com.geeks.mylocker.dao.Record;
 import com.geeks.mylocker.helper.MenuHelper;
@@ -23,8 +23,10 @@ public class ListRecordActivity extends ListActivity {
 	
 	public final static String EXTRA_MESSAGE = "com.geeks.mylocker.groulist.MESSAGE";
 	
+	
 	DataSource ds;
 	
+	Folder folder;
 	//Cursor cursor;
 	
 	@Override
@@ -35,11 +37,11 @@ public class ListRecordActivity extends ListActivity {
 		ds = new DataSource();
 		ds.setup(this);
 		
-		Folder folder = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			Long id = extras.getLong(ListFolderActivity.FOLDER_ID_SELECTED);
 			folder = ds.getFolderDao().load(id);
+			this.setFolder(folder);
 		}
 		
 		
@@ -51,18 +53,8 @@ public class ListRecordActivity extends ListActivity {
 	private ListAdapter createListAdapter(Folder folder) {
 		
 		List<Record> records = folder.getRecords();
-		/*RecordDao recordDao = ds.getRecordDao();
-		cursor = ds.getDb().query(recordDao.getTablename(),recordDao.getAllColumns(),null,null,null,null,null);
-		String[] from = {RecordDao.Properties.Name.columnName}; //column name
-		int[] to = {android.R.id.text1};//location of field 
 		
-		SimpleCursorAdapter adapter = null;  
-		
-		adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to);*/
-		//return adapter;
-		
-		//HeaderViewListAdapter adapter = new HeaderViewListAdapter(headerViewInfos, footerViewInfos, adapter); 
-		return null;
+		return new RecordListAdapter(this, records);
 	}
 	
 	
@@ -81,8 +73,10 @@ public class ListRecordActivity extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG,"Resumed");
-		//cursor.requery();
+		/*folder = ds.getFolderDao().load(folder.getId());
+		
+		Log.d(TAG,"size : " + folder.getRecords().size());
+		Log.d(TAG,"Resumed");*/
 	}
 
 	@Override
@@ -94,8 +88,17 @@ public class ListRecordActivity extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Bundle extras = null;
-		return MenuHelper.onOptionsItemSelected(item, this, null);
+		Bundle extras = new Bundle();
+		extras.putLong(ListFolderActivity.FOLDER_ID_SELECTED, folder.getId());
+		return MenuHelper.onOptionsItemSelected(item, this, extras);
+	}
+
+	public Folder getFolder() {
+		return folder;
+	}
+
+	public void setFolder(Folder folder) {
+		this.folder = folder;
 	}
 	
 }

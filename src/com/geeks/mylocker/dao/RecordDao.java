@@ -30,8 +30,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property CreatedDate = new Property(2, java.util.Date.class, "createdDate", false, "CREATED_DATE");
-        public final static Property FolderId = new Property(3, long.class, "folderId", false, "FOLDER_ID");
+        public final static Property UserId = new Property(2, String.class, "userId", false, "USER_ID");
+        public final static Property UserPassword = new Property(3, String.class, "userPassword", false, "USER_PASSWORD");
+        public final static Property CreatedDate = new Property(4, java.util.Date.class, "createdDate", false, "CREATED_DATE");
+        public final static Property FolderId = new Property(5, long.class, "folderId", false, "FOLDER_ID");
     };
 
     private DaoSession daoSession;
@@ -53,8 +55,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'RECORD' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'NAME' TEXT NOT NULL ," + // 1: name
-                "'CREATED_DATE' INTEGER," + // 2: createdDate
-                "'FOLDER_ID' INTEGER NOT NULL );"); // 3: folderId
+                "'USER_ID' TEXT NOT NULL ," + // 2: userId
+                "'USER_PASSWORD' TEXT NOT NULL ," + // 3: userPassword
+                "'CREATED_DATE' INTEGER," + // 4: createdDate
+                "'FOLDER_ID' INTEGER NOT NULL );"); // 5: folderId
     }
 
     /** Drops the underlying database table. */
@@ -73,12 +77,14 @@ public class RecordDao extends AbstractDao<Record, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindString(2, entity.getName());
+        stmt.bindString(3, entity.getUserId());
+        stmt.bindString(4, entity.getUserPassword());
  
         java.util.Date createdDate = entity.getCreatedDate();
         if (createdDate != null) {
-            stmt.bindLong(3, createdDate.getTime());
+            stmt.bindLong(5, createdDate.getTime());
         }
-        stmt.bindLong(4, entity.getFolderId());
+        stmt.bindLong(6, entity.getFolderId());
     }
 
     @Override
@@ -99,8 +105,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
         Record entity = new Record( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // createdDate
-            cursor.getLong(offset + 3) // folderId
+            cursor.getString(offset + 2), // userId
+            cursor.getString(offset + 3), // userPassword
+            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // createdDate
+            cursor.getLong(offset + 5) // folderId
         );
         return entity;
     }
@@ -110,8 +118,10 @@ public class RecordDao extends AbstractDao<Record, Long> {
     public void readEntity(Cursor cursor, Record entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.getString(offset + 1));
-        entity.setCreatedDate(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
-        entity.setFolderId(cursor.getLong(offset + 3));
+        entity.setUserId(cursor.getString(offset + 2));
+        entity.setUserPassword(cursor.getString(offset + 3));
+        entity.setCreatedDate(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setFolderId(cursor.getLong(offset + 5));
      }
     
     /** @inheritdoc */

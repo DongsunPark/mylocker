@@ -29,12 +29,14 @@ public class ListRecordActivity extends ListActivity {
 	Folder folder;
 	//Cursor cursor;
 	
+	ListAdapter adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_list);
 		
-		ds = new DataSource();
+		/*ds = new DataSource();
 		ds.setup(this);
 		
 		Bundle extras = getIntent().getExtras();
@@ -44,8 +46,8 @@ public class ListRecordActivity extends ListActivity {
 			this.setFolder(folder);
 		}
 		
-		
-		this.setListAdapter(this.createListAdapter(folder));
+		adapter = this.createListAdapter(folder);
+		this.setListAdapter(adapter);*/
 		
 		addUIListeners();
 	}
@@ -71,12 +73,29 @@ public class ListRecordActivity extends ListActivity {
 	}
 
 	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Log.d(TAG,"started");
+		ds = new DataSource();
+		ds.setup(this);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			Long id = extras.getLong(ListFolderActivity.FOLDER_ID_SELECTED);
+			folder = ds.getFolderDao().load(id);
+			this.setFolder(folder);
+		}
+		
+		adapter = this.createListAdapter(folder);
+		this.setListAdapter(adapter);
+		
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
-		/*folder = ds.getFolderDao().load(folder.getId());
-		
-		Log.d(TAG,"size : " + folder.getRecords().size());
-		Log.d(TAG,"Resumed");*/
+		Log.d(TAG,"Resumed");
 	}
 
 	@Override

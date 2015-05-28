@@ -20,6 +20,11 @@ public class RecordListAdapter extends ArrayAdapter<Record> {
 	
 	private final Context context;
 	private final List<Record> records;
+	
+	static class ViewHolder {
+		public TextView text;
+		public ImageView image;
+	}
 
 	public RecordListAdapter(Context context, List<Record> records) {
 		super(context, R.layout.rowlayout_record, records);
@@ -30,17 +35,31 @@ public class RecordListAdapter extends ArrayAdapter<Record> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		LayoutInflater inflater = (LayoutInflater) context
+		/*LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		View rowView = inflater.inflate(R.layout.rowlayout_record, parent, false);
+		View rowView = inflater.inflate(R.layout.rowlayout_record, parent, false);*/
 		
-		TextView textView = (TextView) rowView.findViewById(R.id.rowlayout_record_name);
-		ImageView imageView = (ImageView) rowView.findViewById(R.id.rowlayout_record_icon);
+		View rowView = convertView;
+		if(rowView == null) {
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			rowView = inflater.inflate(R.layout.rowlayout_record, null);
+			
+			ViewHolder viewHolder = new ViewHolder();
+			viewHolder.text = (TextView) rowView.findViewById(R.id.rowlayout_record_name);
+			viewHolder.image = (ImageView) rowView.findViewById(R.id.rowlayout_record_icon);
+			
+			rowView.setTag(viewHolder);
+			
+		}
+		
+		//fill data
+		ViewHolder holder = (ViewHolder)rowView.getTag();
 		
 		Record record = records.get(position);
 		Log.d(TAG, record.getName());
-		textView.setText(record.getName());
+		holder.text.setText(record.getName());
 		
 		// Change the icon for Windows and iPhone
 		//imageView.setImageResource(R.drawable.no);

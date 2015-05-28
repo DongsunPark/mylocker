@@ -75,9 +75,11 @@ public class AddRecordActivity extends Activity {
 		String password = uiPassword.getText().toString();
 		
 		Record record = new Record(null, recordName, userId, password, new Date(),folder.getId());
-		ds.getDaoSession().getRecordDao().insert(record);
-		Log.d(TAG, "Inserted new record, ID: " + record.getId());
-		//addNote();
+		if(ds.getDaoSession().getRecordDao().insert(record) > 0L) {
+			Log.d(TAG, "Inserted new record, ID: " + record.getId());
+			//folder.getRecords().add(record);
+		}
+		
 	}
 
 	private void addNote() {

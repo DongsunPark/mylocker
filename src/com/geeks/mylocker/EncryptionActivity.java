@@ -1,8 +1,11 @@
-package org.nick.androidpbe;
+package com.geeks.mylocker;
 
 import javax.crypto.SecretKey;
 
+import org.nick.androidpbe.Crypto;
+
 import com.geeks.mylocker.R;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;

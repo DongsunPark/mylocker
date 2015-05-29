@@ -1,6 +1,5 @@
 package com.geeks.mylocker;
 
-import java.text.DateFormat;
 import java.util.Date;
 
 import android.app.Activity;
@@ -11,15 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.geeks.mylocker.dao.DaoSession;
-import com.geeks.mylocker.dao.Field;
+import com.geeks.mylocker.async.CryptoTask;
 import com.geeks.mylocker.dao.Folder;
 import com.geeks.mylocker.dao.Record;
+import com.geeks.mylocker.encrypto.Encryptor;
 import com.geeks.mylocker.helper.MenuHelper;
 
 public class AddRecordActivity extends Activity {
+	
+	public static String masterKey = "masterkey";
 
 	protected final String TAG = getClass().getSimpleName();
+	
+	Encryptor encryptor;
 	
 	private Folder folder = null;
 	DataSource ds;
@@ -29,6 +32,8 @@ public class AddRecordActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_record);
 
+		encryptor = Encryptor.select(Encryptor.PADDING_ENC_IDX);
+		
 		ds = new DataSource();
 		ds.setup(this);
 		
@@ -58,6 +63,8 @@ public class AddRecordActivity extends Activity {
 	
 	public void onSaveButtonClick(View view) {
 		
+		
+		
 		EditText uiFolderName = (EditText)findViewById(R.id.ui_add_record_folder_name);
 		EditText uiRecordName = (EditText)findViewById(R.id.ui_add_record_record_name);
 		EditText uiUserId = (EditText)findViewById(R.id.ui_add_record_user_id);
@@ -74,6 +81,19 @@ public class AddRecordActivity extends Activity {
 		String userId = uiUserId.getText().toString();
 		String password = uiPassword.getText().toString();
 		
+		 new CryptoTask() {
+
+             @Override
+             protected String doCrypto() {
+                 return encryptor.encrypt("TEST", "masterKey");
+             }
+             
+			protected void updateUi(String ciphertext) {
+				
+             }
+         }.execute();
+		
+		
 		Record record = new Record(null, recordName, userId, password, new Date(),folder.getId());
 		if(ds.getDaoSession().getRecordDao().insert(record) > 0L) {
 			Log.d(TAG, "Inserted new record, ID: " + record.getId());
@@ -81,33 +101,4 @@ public class AddRecordActivity extends Activity {
 		}
 		
 	}
-
-	private void addNote() {
-
-		/*DaoSession sesson = ds.getDaoMaster().newSession();
-		//ds.getDb().beginTransaction();
-		final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-				DateFormat.MEDIUM);*/
-		
-		/*String comment = "Added on " + df.format(new Date());
-		daoSession.getFolderDao().createTable(db, true);*/
-		
-		/*folder = new Folder(null, "group1", new Date());
-		sesson.getFolderDao().insert(folder);
-		Log.d(TAG, "Inserted new folder, ID: " + folder.getId());*/
-		
-
-		/*Record record = new Record(null, "record1", new Date(),14L);
-		sesson.getRecordDao().insert(record);
-		Log.d(TAG, "Inserted new record, ID: " + record.getId());
-		
-		Field field = new Field(null,"test", "value", 1, record.getId());
-		sesson.getFieldDao().insert(field);
-		Log.d(TAG, "Inserted new field, ID: " + field.getId());
-		//cursor.requery();*/
-		//ds.getDb().releaseReference();
-		//ds.getDb().endTransaction();*/
-	}
-
-	
 }

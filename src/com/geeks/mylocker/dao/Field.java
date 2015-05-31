@@ -7,7 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table FIELD.
  */
-public class Field {
+public class Field implements Entity {
 
     private Long id;
     /** Not-null value. */

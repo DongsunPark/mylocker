@@ -29,10 +29,10 @@
         <activity
             android:name=".ListFolderActivity"
             android:label="@string/title_activity_folder_list" >
-           <!--  <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
         </activity>
         <activity
             android:name=".ListRecordActivity"
@@ -41,10 +41,10 @@
         <activity
             android:name=".EncryptionActivity"
             android:label="@string/title_activity_folder_list" >
-             <intent-filter>
+            <!--  <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter> -->
         </activity>
     </application>
 

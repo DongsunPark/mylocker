@@ -7,9 +7,14 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -41,10 +46,12 @@ public class ListRecordActivity extends ListActivity {
 	
 	Activity self;
 	
+	ListView listView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_group_list);
+		//setContentView(R.layout.activity_group_list);
 		
 		/*ds = new DataSource();
 		ds.setup(this);
@@ -60,28 +67,77 @@ public class ListRecordActivity extends ListActivity {
 		this.setListAdapter(adapter);*/
 		self = this;
 		
+		listView = this.getListView();
+		registerForContextMenu(listView);
 		addUIListeners();
 	}
 	
 	private ListAdapter createListAdapter(Folder folder) {
 		
-		List<Record> records = folder.getRecords();
-		
-		return new RecordListAdapter(this, records);
+		return new RecordListAdapter(this, getRecords());
+	}
+	
+	private List<Record> getRecords() {
+		return folder.getRecords();
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	private void addUIListeners() {
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View v, int index, long arg3) {
+
+            		//Toast.makeText(self, "test", Toast.LENGTH_LONG).show();
+            		
+            		return false;
+            }
+		});
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
+				Record record = new Record(id);
+		        AbstractDao<Record, Long> dao = ds.getDaoSession().getRecordDao(); 
+				DaoCommand<Record> commandRecord = new DaoCommand<Record>(dao, record, DaoCommand.CRUD.SELECT);
+					
+				new DaoTask<Record>() {
+						@Override
+						protected Record executeDao(DaoCommand<Record> daoCommand) {
+							Record entity = daoCommand.getEntity();
+							if(daoCommand.getCrud() == DaoCommand.CRUD.SELECT) {
+								return daoCommand.getDao().load(id+1);
+							}
+							return null;
+						}
+						@Override
+						protected void updateUi(Entity result) {
+							Record record = (Record)result;
+							Toast.makeText(self, record.getName() + " selected", Toast.LENGTH_LONG).show();
+							
+							Intent intent = new Intent(self, ViewRecordActivity.class);
+							Bundle extras = new Bundle();
+							extras.putSerializable(SELECTED_ENTITY, result);;
+							if(extras !=null) intent.putExtras(extras);
+							self.startActivity(intent);
+						}
+					}.execute(commandRecord);
+				
+			}
+			
+		});
+		
 		
 	}
 
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, final long id) {
-		/*Intent intent = new Intent(this,ViewRecordActivity.class);
+		Intent intent = new Intent(this,ViewRecordActivity.class);
 		String message = "TEST";
 		intent.putExtra(EXTRA_MESSAGE, message);
-		startActivity(intent);*/
+		startActivity(intent);
 		
 		Record record = new Record(id);
         AbstractDao<Record, Long> dao = ds.getDaoSession().getRecordDao(); 
@@ -108,7 +164,7 @@ public class ListRecordActivity extends ListActivity {
 					self.startActivity(intent);
 				}
 			}.execute(commandRecord);
-	}
+	}*/
 
 	@Override
 	protected void onStart() {
@@ -135,7 +191,36 @@ public class ListRecordActivity extends ListActivity {
 		super.onResume();
 		Log.d(TAG,"Resumed");
 	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,  ContextMenuInfo menuInfo) {
+	  if ( v == listView) {
+	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+	    menu.setHeaderTitle("Menu");
+	    String[] menuItems = getResources().getStringArray(R.array.record_view_menu);
+	    for (int i = 0; i<menuItems.length; i++) {
+	      menu.add(Menu.NONE, i, i, menuItems[i]);
+	    }
+	  }
+	}
 
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		
+		Record record = this.getRecords().get((int)info.id);
+		
+		int menuItemIndex = item.getItemId();
+		String[] menuItems = getResources().getStringArray(R.array.record_view_menu);
+		String menuItemName = menuItems[menuItemIndex];
+		
+		if("delete".equalsIgnoreCase(menuItemName)) {
+			Toast.makeText(self, "deleting", Toast.LENGTH_SHORT).show();
+		}
+		
+		return true;
+	}
+	 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

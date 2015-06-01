@@ -54,6 +54,8 @@ public class RecordListAdapter extends ArrayAdapter<Record> {
 			
 		}
 		
+		
+		
 		//fill data
 		ViewHolder holder = (ViewHolder)rowView.getTag();
 		

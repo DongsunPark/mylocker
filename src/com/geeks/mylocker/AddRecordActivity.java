@@ -108,7 +108,7 @@ public class AddRecordActivity extends Activity {
 				}
 				@Override
 				protected void updateUi(Entity result) {}
-			}.executeDao(command);
+			}.executeDao(command);//Synchronous because of using executeDao instead of execute
 		}
 		
 		recordName = uiRecordName.getText().toString();

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="record_view_menu">
+        <item>delete</item>
+        <item>view</item>
+        <item>edit</item>
+    </array>
+</resources>

@@ -98,16 +98,26 @@ public class ListRecordActivity extends ListActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
-				Record record = new Record(id);
-		        AbstractDao<Record, Long> dao = ds.getDaoSession().getRecordDao(); 
+				
+				RecordListAdapter adapter = (RecordListAdapter)parent.getAdapter();
+				Record record = adapter.getItem(position);
+				
+				//Record record = new Record(id);
+				AbstractDao<Record, Long> dao = null;
 				DaoCommand<Record> commandRecord = new DaoCommand<Record>(dao, record, DaoCommand.CRUD.SELECT);
 					
 				new DaoTask<Record>() {
 						@Override
 						protected Record executeDao(DaoCommand<Record> daoCommand) {
+							ds = new DataSource();
+							ds.setup(self);
+							AbstractDao<Record, Long> dao = ds.getDaoSession().getRecordDao(); 
 							Record entity = daoCommand.getEntity();
 							if(daoCommand.getCrud() == DaoCommand.CRUD.SELECT) {
-								return daoCommand.getDao().load(id+1);
+								Record record = dao.load(entity.getId());
+								ds.close();
+								
+								return record;
 							}
 							return null;
 						}
@@ -183,6 +193,7 @@ public class ListRecordActivity extends ListActivity {
 		
 		adapter = this.createListAdapter(folder);
 		this.setListAdapter(adapter);
+		ds.close();
 		
 	}
 
@@ -208,16 +219,33 @@ public class ListRecordActivity extends ListActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 		
-		Record record = this.getRecords().get((int)info.id);
+		int position = info.position;
+		long id = info.id;
+		
+		Record record = this.getRecords().get((int)id);
 		
 		int menuItemIndex = item.getItemId();
 		String[] menuItems = getResources().getStringArray(R.array.record_view_menu);
 		String menuItemName = menuItems[menuItemIndex];
 		
+		ds = new DataSource();
+		ds.setup(this);
 		if("delete".equalsIgnoreCase(menuItemName)) {
-			Toast.makeText(self, "deleting", Toast.LENGTH_SHORT).show();
+			Toast.makeText(self, "deleting " + record.getName(), Toast.LENGTH_SHORT).show();
+			
+			//view and model
+			RecordListAdapter listAdapter = (RecordListAdapter)adapter;
+			listAdapter.remove(record);
+			listAdapter.notifyDataSetChanged();
+			
+			//db
+			ds.getRecordDao().delete(record);
+		} else if("view".equalsIgnoreCase(menuItemName)) {
+			View view = listView.getSelectedView();
+			listView.getOnItemClickListener().onItemClick(listView, view, position, id);
 		}
 		
+		ds.close();
 		return true;
 	}
 	 

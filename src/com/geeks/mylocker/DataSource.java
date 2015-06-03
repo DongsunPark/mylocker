@@ -35,6 +35,10 @@ public class DataSource {
 		fieldDao = daoSession.getFieldDao();
 	}
 
+	public void close() {
+		if(db !=null) db.close();
+	}
+	
 	public SQLiteDatabase getDb() {
 		return db;
 	}

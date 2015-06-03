@@ -66,6 +66,7 @@ public class ListFolderActivity extends ListActivity {
 		cursor.requery();*/
 		
 		//Folder folder = ds.getFolderDao().load(id);
+		//SimpleCursorAdapter adatper = (SimpleCursorAdapter)l.getAdapter();
 		
 		
 		Intent intent = new Intent(this, ListRecordActivity.class);

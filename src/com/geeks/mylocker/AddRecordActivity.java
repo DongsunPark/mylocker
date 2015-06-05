@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.geeks.mylocker.async.CryptoTask;
@@ -154,5 +157,37 @@ public class AddRecordActivity extends Activity {
 					self.startActivity(intent);
 				}
 			}.execute(commandRecord);
+	}
+	
+	public void addFieldsView(View view) {
+		
+		final LinearLayout layout = (LinearLayout)findViewById(R.layout.activity_add_record);
+		
+		//LinearLayout child = new LinearLayout(self);
+		
+		/*final RadioButton button2 = new RadioButton(self);
+		button2.setChecked(true);
+		child.addView(button2);*/
+		
+		final RadioGroup group = new RadioGroup(self);
+		final RadioButton button1 = new RadioButton(self);
+		button1.setId(1234); // this id can be generated as you like.
+		group.addView(button1,
+		    new RadioGroup.LayoutParams(
+		        RadioGroup.LayoutParams.WRAP_CONTENT,    
+		        RadioGroup.LayoutParams.WRAP_CONTENT));
+		final RadioButton button2 = new RadioButton(self);
+		button2.setId(3456); // this id can be generated as you like.
+		button2.setChecked(true);
+		group.addView(button2,
+		    new RadioGroup.LayoutParams(
+		        RadioGroup.LayoutParams.WRAP_CONTENT,    
+		        RadioGroup.LayoutParams.WRAP_CONTENT));
+		layout.addView(group,
+		    new LinearLayout.LayoutParams(
+		        LinearLayout.LayoutParams.MATCH_PARENT,    
+		        LinearLayout.LayoutParams.WRAP_CONTENT));
+		
+		Toast.makeText(self,"test", Toast.LENGTH_LONG).show();
 	}
 }

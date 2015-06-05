@@ -15,7 +15,7 @@
         android:id="@+id/ui_add_record_folder_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="@string/add_record_folder_name"
         android:inputType="text" >
@@ -24,7 +24,7 @@
         android:id="@+id/ui_add_record_record_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="@string/add_record_record_name"
         android:inputType="text" >
@@ -33,7 +33,7 @@
         android:id="@+id/ui_add_record_user_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="@string/add_record_user_id"
         android:inputType="text" >
@@ -42,52 +42,19 @@
         android:id="@+id/ui_add_record_user_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="@string/add_record_user_password"
         android:inputType="text|textPassword" >
     </EditText>
 
-   <!--  <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="addUrl"
-        android:text="@string/add_url" />
+        android:onClick="addFieldsView"
+        android:src="@android:drawable/ic_input_add" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.84"
-        android:orientation="vertical">
-    </LinearLayout>
-
-    <ProgressBar
-      android:id="@+id/progressBar_loading"
-      style="@android:style/Widget.ProgressBar.Large"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_above="@+id/button1"
-      android:visibility="invisible" 
-      android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"/>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/url"
-        android:layout_below="@+id/url"
-        android:layout_marginTop="18dp"
-        android:onClick="downloadImages"
-        android:text="@string/download_and_display_image" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="deleteDownloadedImages"
-        android:text="@string/clear_directory" /> -->
+   
 
 </LinearLayout>

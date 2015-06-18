@@ -2,8 +2,11 @@ package com.geeks.mylocker;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.geeks.mylocker.async.CryptoTask;
@@ -54,6 +57,23 @@ public class ViewRecordActivity extends Activity {
 		recordUserPasswordView.setText(record.getUserPassword());*/
 		
 		decryptPassword();
+	}
+	
+	public void onPasswordVisible(View view) {
+		
+		TextView recordUserPasswordView = (TextView)this.findViewById(R.id.view_record_user_password);;
+		
+		Button button = (Button)view;
+		if(button.getText().equals("Hide")) {
+			PasswordTransformationMethod transform = new PasswordTransformationMethod();
+			recordUserPasswordView.setTransformationMethod(transform);
+			button.setText("View");
+		} else {
+			recordUserPasswordView.setTransformationMethod(null);
+			button.setText("Hide");
+		}
+		
+		//Toast.makeText(ViewRecordActivity.this, "make password visible", Toast.LENGTH_LONG).show();;
 	}
 	
 	private void decryptPassword() {

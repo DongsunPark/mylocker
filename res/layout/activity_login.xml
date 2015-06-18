@@ -1,0 +1,108 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+   android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+   android:paddingRight="@dimen/activity_horizontal_margin"
+   android:paddingTop="@dimen/activity_vertical_margin"
+   android:paddingBottom="@dimen/activity_vertical_margin"
+   tools:context=".MainActivity"
+   android:background="@drawable/android">
+   
+   <TextView 
+      android:text="Login" 
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/login_title"
+      android:textSize="35dp"
+      android:layout_marginTop="100dp"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true" />
+      
+   <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="MyLocker"
+      android:id="@+id/login_app_title"
+      android:layout_below="@+id/login_title"
+      android:layout_centerHorizontal="true"
+      android:textColor="#ff7aff24"
+      android:textSize="35dp" />
+      
+ <!--  <EditText
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/editText"
+      android:hint="Enter Name"
+      android:focusable="true"
+      android:textColorHighlight="#ff7eff15"
+      android:textColorHint="#ffff25e6"
+      android:layout_marginTop="46dp"
+      android:layout_below="@+id/imageView"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true" /> -->
+      
+   <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/login_logo"
+      android:src="@drawable/logo_footer"
+      android:layout_below="@+id/login_app_title"
+      android:layout_centerHorizontal="true" />
+ 
+   
+   <EditText
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:inputType="textPassword"
+      android:ems="10"
+      android:id="@+id/login_masterkey"
+      android:layout_below="@+id/login_logo"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:textColorHint="#ffff299f"
+      android:layout_marginTop="46dp"
+      android:hint="Master Key" />
+      
+   <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Attempts Left:"
+      android:id="@+id/login_msg_attempts"
+      android:layout_below="@+id/login_masterkey"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:textSize="25dp" />
+      
+   <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="New Text"
+      android:id="@+id/login_msg"
+      android:layout_alignTop="@+id/login_msg_attempts"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
+      android:layout_alignBottom="@+id/login_msg_attempts"
+      android:layout_toEndOf="@+id/login_title"
+      android:textSize="25dp"
+      android:layout_toRightOf="@+id/login_title" />
+      
+   <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="login"
+      android:id="@+id/login_btn_login"
+      android:layout_alignParentBottom="true"
+      android:layout_toLeftOf="@+id/login_title"
+      android:layout_toStartOf="@+id/login_title" />
+      
+   <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Cancel"
+      android:id="@+id/login_btn_cancel"
+      android:layout_alignParentBottom="true"
+      android:layout_toRightOf="@+id/login_title"
+      android:layout_toEndOf="@+id/login_title" />
+
+</RelativeLayout>

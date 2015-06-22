@@ -1,5 +1,8 @@
 package com.geeks.mylocker;
 
+import com.geeks.mylocker.async.CryptoTask;
+import com.geeks.mylocker.encrypto.Encryptor;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,6 +22,8 @@ public class LoginActivity extends Activity {
 	Button loginButton, cancelButton;
 	
 	EditText loginMasterkey;
+	
+	private String encryptedMasterKey;
 
 	TextView message;
 	int counter = 3;
@@ -68,6 +73,23 @@ public class LoginActivity extends Activity {
 				finish();
 			}
 		});
+	}
+	
+	private void decryptPassword() {
+
+		new CryptoTask() {
+
+			@Override
+			protected String doCrypto() {
+				Encryptor encryptor = Encryptor.select(Encryptor.PADDING_ENC_IDX);
+				return encryptor.decrypt(encryptedMasterKey, APP_MASTER_KEY);
+			}
+
+			@Override
+			protected void updateUi(String result) {
+				
+			}
+        }.execute(); 
 	}
 
 }

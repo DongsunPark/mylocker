@@ -28,7 +28,7 @@ import de.greenrobot.dao.AbstractDao;
 
 public class AddRecordActivity extends Activity {
 	
-	public static String masterKey = "masterkey";
+	//public static String masterKey = "masterkey";
 
 	protected final String TAG = getClass().getSimpleName();
 	

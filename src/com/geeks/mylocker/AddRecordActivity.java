@@ -26,10 +26,8 @@ import com.geeks.mylocker.helper.MenuHelper;
 
 import de.greenrobot.dao.AbstractDao;
 
-public class AddRecordActivity extends Activity {
+public class AddRecordActivity extends AppBaseActivity {
 	
-	//public static String masterKey = "masterkey";
-
 	protected final String TAG = getClass().getSimpleName();
 	
 	Encryptor encryptor;
@@ -55,6 +53,8 @@ public class AddRecordActivity extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+			Config config = (Config) extras.getSerializable(Config.CONTEXT);
+			setConfig(config);
 			Long id = extras.getLong(ListFolderActivity.FOLDER_ID_SELECTED);
 			folder = ds.getFolderDao().load(id);
 			if(folder !=null) {
@@ -76,8 +76,9 @@ public class AddRecordActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Bundle extras = null;
-		return MenuHelper.onOptionsItemSelected(item, this, null);
+		Bundle extras = new Bundle();
+		extras.putSerializable(Config.CONTEXT, this.getConfig());
+		return MenuHelper.onOptionsItemSelected(item, this, extras);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -121,7 +122,7 @@ public class AddRecordActivity extends Activity {
 		String ciphertext = new CryptoTask() {
              @Override
              protected String doCrypto() {
-                 return encryptor.encrypt(password, "masterKey");
+                 return encryptor.encrypt(password, ((AddRecordActivity)self).getConfig().getMasterKey());
              }
 			protected void updateUi(String ciphertext) {
 				
@@ -152,6 +153,7 @@ public class AddRecordActivity extends Activity {
 					
 					Intent intent = new Intent(self, ViewRecordActivity.class);
 					Bundle extras = new Bundle();
+					extras.putSerializable(Config.CONTEXT, ((AddRecordActivity)self).getConfig());
 					extras.putSerializable(ListRecordActivity.SELECTED_ENTITY, result);;
 					if(extras !=null) intent.putExtras(extras);
 					self.startActivity(intent);

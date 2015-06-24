@@ -14,7 +14,7 @@ import com.geeks.mylocker.dao.Record;
 import com.geeks.mylocker.encrypto.Encryptor;
 import com.geeks.mylocker.helper.MenuHelper;
 
-public class ViewRecordActivity extends Activity {
+public class ViewRecordActivity extends AppBaseActivity {
 
 	protected final String TAG = getClass().getSimpleName();
 	
@@ -33,6 +33,8 @@ public class ViewRecordActivity extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+			Config config = (Config) extras.getSerializable(Config.CONTEXT);
+			this.setConfig(config);
 			Record record = (Record) extras.getSerializable(ListRecordActivity.SELECTED_ENTITY);
 			//reload detached entity.
 			record = ds.getRecordDao().load(record.getId());
@@ -57,6 +59,8 @@ public class ViewRecordActivity extends Activity {
 		recordUserPasswordView.setText(record.getUserPassword());*/
 		
 		decryptPassword();
+		Button btnPasswordVisible = (Button)this.findViewById(R.id.btn_record_user_password_visible);
+		onPasswordVisible(btnPasswordVisible);
 	}
 	
 	public void onPasswordVisible(View view) {
@@ -83,7 +87,7 @@ public class ViewRecordActivity extends Activity {
 			@Override
 			protected String doCrypto() {
 				Encryptor encryptor = Encryptor.select(Encryptor.PADDING_ENC_IDX);
-				return encryptor.decrypt(record.getUserPassword(), "masterKey");
+				return encryptor.decrypt(record.getUserPassword(), ((ViewRecordActivity)self).getConfig().getMasterKey());
 			}
 
 			@Override
@@ -104,8 +108,9 @@ public class ViewRecordActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Bundle extras = null;
-		return MenuHelper.onOptionsItemSelected(item, this, null);
+		Bundle extras = new Bundle();
+		extras.putSerializable(Config.CONTEXT, ((ViewRecordActivity)self).getConfig());
+		return MenuHelper.onOptionsItemSelected(item, this, extras);
 	}
 
 	public Record getRecord() {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.geeks.mylocker.AddRecordActivity;
+import com.geeks.mylocker.AppBaseActivity;
 import com.geeks.mylocker.ListFolderActivity;
 import com.geeks.mylocker.R;
 
@@ -20,13 +21,18 @@ public class MenuHelper {
 		switch (id) {
 			case R.id.action_add:
 				intent = new Intent(context, AddRecordActivity.class);
-				if(extras !=null) intent.putExtras(extras);
+				if(extras !=null) {
+					intent.putExtras(extras);
+				}
 				context.startActivity(intent);
 				break;
 			case R.id.action_folder_list:
 				intent = new Intent(context, ListFolderActivity.class);
 				if(extras !=null) intent.putExtras(extras);
 				context.startActivity(intent);
+				break;
+			case R.id.action_logout:
+				((BaseActivityHelper)context).getActivityHelper().closeAllActivities();
 				break;
 		}
 		

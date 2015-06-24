@@ -4,8 +4,10 @@ import com.geeks.mylocker.async.CryptoTask;
 import com.geeks.mylocker.encrypto.Encryptor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,16 +16,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppBaseActivity {
 
+	Activity self;
+	
+	protected final String TAG = getClass().getSimpleName();
+	
 	private static String APP_MASTER_KEY = "mylocker";
-	private static String TEMP_MASTER_KEY = "test";
+	private static String TEMP_MASTER_KEY = "masterKey";
 	
 	Button loginButton, cancelButton;
 	
 	EditText loginMasterkey;
 	
-	private String encryptedMasterKey;
+	private String encryptedMasterKey = "0Yrz8ctzQSQZ7SpXOv760w==]ZcmisNvrFEGkDDVqnBQCKA==";
 
 	TextView message;
 	int counter = 3;
@@ -33,14 +39,23 @@ public class LoginActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		
+		self = this;
 
 		loginButton = (Button) findViewById(R.id.login_btn_login);
 		loginMasterkey = (EditText) findViewById(R.id.login_masterkey);
+		
+		//TODO
+		loginMasterkey.getText().append(TEMP_MASTER_KEY);
 
 		cancelButton = (Button) findViewById(R.id.login_btn_cancel);
 		
 		message = (TextView) findViewById(R.id.login_msg);
 		message.setVisibility(View.GONE);
+		
+		//Encryptor encryptor = Encryptor.select(Encryptor.PADDING_ENC_IDX);
+		//Log.i(TAG, "TEST:" +encryptor.encrypt(TEMP_MASTER_KEY, APP_MASTER_KEY));
+		//Log.i(TAG, "TEST:" +encryptor.decrypt(encryptedMasterKey, APP_MASTER_KEY));
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -50,19 +65,7 @@ public class LoginActivity extends Activity {
 				if (loginMasterkey.getText().toString().equals("")) {
 					Toast.makeText(getApplicationContext(), "Please type your masterkey", Toast.LENGTH_SHORT).show();
 				} else {
-					
-					
-					
-					Toast.makeText(getApplicationContext(),	"Wrong Credentials", Toast.LENGTH_SHORT).show();
-								
-					message.setVisibility(View.VISIBLE);
-					message.setBackgroundColor(Color.RED);
-					counter--;
-					message.setText(Integer.toString(counter));
-
-					if (counter == 0) {
-						loginButton.setEnabled(false);
-					}
+					decryptPassword();
 				}
 			}
 		});
@@ -87,7 +90,31 @@ public class LoginActivity extends Activity {
 
 			@Override
 			protected void updateUi(String result) {
-				
+
+				if(loginMasterkey.getText().toString().equals(result)) {
+					
+					Config config = new Config();
+					config.setLogined(Boolean.TRUE);
+					config.setMasterKey(result);
+					
+					Intent intent = new Intent(self, ListFolderActivity.class);
+					Bundle extras = new Bundle();
+					extras.putSerializable(Config.CONTEXT, config);
+					if(extras !=null) intent.putExtras(extras);
+					self.startActivity(intent);
+					
+				} else {
+					Toast.makeText(getApplicationContext(),	"Wrong Credentials", Toast.LENGTH_SHORT).show();
+								
+					message.setVisibility(View.VISIBLE);
+					message.setBackgroundColor(Color.RED);
+					counter--;
+					message.setText(Integer.toString(counter));
+	
+					if (counter == 0) {
+						loginButton.setEnabled(false);
+					}
+				}
 			}
         }.execute(); 
 	}

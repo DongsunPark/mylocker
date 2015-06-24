@@ -25,32 +25,46 @@ import com.geeks.mylocker.async.DaoTask;
 import com.geeks.mylocker.dao.Entity;
 import com.geeks.mylocker.dao.Folder;
 import com.geeks.mylocker.dao.Record;
+import com.geeks.mylocker.helper.ActivityHelper;
+import com.geeks.mylocker.helper.BaseActivityHelper;
 import com.geeks.mylocker.helper.MenuHelper;
 
 import de.greenrobot.dao.AbstractDao;
 
-public class ListRecordActivity extends ListActivity {
+public class ListRecordActivity extends ListActivity implements BaseActivityHelper{
 
 	protected final String TAG = getClass().getSimpleName();
 	
 	public final static String EXTRA_MESSAGE = "com.geeks.mylocker.groulist.MESSAGE";
 	public final static String SELECTED_ENTITY = "com.geeks.mylocker.entity";
 	
+	private Config config;
 	
-	DataSource ds;
+	private DataSource ds;
 	
-	Folder folder;
+	private Folder folder;
 	//Cursor cursor;
 	
-	ListAdapter adapter;
+	private ListAdapter adapter;
 	
-	Activity self;
+	private Activity self;
 	
-	ListView listView;
+	private ListView listView;
+	
+	private ActivityHelper activityHelper;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			config = (Config) extras.getSerializable(Config.CONTEXT);
+		}	
+		
+		activityHelper = new ActivityHelper(this);
+		activityHelper.registerBaseActivityReceiver();
+		
 		//setContentView(R.layout.activity_group_list);
 		
 		/*ds = new DataSource();
@@ -128,7 +142,8 @@ public class ListRecordActivity extends ListActivity {
 							
 							Intent intent = new Intent(self, ViewRecordActivity.class);
 							Bundle extras = new Bundle();
-							extras.putSerializable(SELECTED_ENTITY, result);;
+							extras.putSerializable(Config.CONTEXT, config);
+							extras.putSerializable(SELECTED_ENTITY, result);
 							if(extras !=null) intent.putExtras(extras);
 							self.startActivity(intent);
 						}
@@ -204,6 +219,12 @@ public class ListRecordActivity extends ListActivity {
 	}
 	
 	@Override
+    protected void onDestroy() {
+    	super.onDestroy();
+    	activityHelper.unRegisterBaseActivityReceiver();
+    }
+	
+	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,  ContextMenuInfo menuInfo) {
 	  if ( v == listView) {
 	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
@@ -260,6 +281,7 @@ public class ListRecordActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Bundle extras = new Bundle();
 		extras.putLong(ListFolderActivity.FOLDER_ID_SELECTED, folder.getId());
+		extras.putSerializable(Config.CONTEXT, config);
 		return MenuHelper.onOptionsItemSelected(item, this, extras);
 	}
 
@@ -270,5 +292,20 @@ public class ListRecordActivity extends ListActivity {
 	public void setFolder(Folder folder) {
 		this.folder = folder;
 	}
+
+	@Override
+	public ActivityHelper getActivityHelper() {
+		
+		return this.activityHelper;
+	}
 	
+	@Override
+	public Config getConfig() {
+		return this.config;
+	}
+
+	@Override
+	public void setConfig(Config config) {
+		this.config = config;
+	}
 }

@@ -14,15 +14,22 @@ import android.widget.SimpleCursorAdapter;
 
 import com.geeks.mylocker.dao.Folder;
 import com.geeks.mylocker.dao.FolderDao;
+import com.geeks.mylocker.dao.Record;
+import com.geeks.mylocker.helper.ActivityHelper;
+import com.geeks.mylocker.helper.BaseActivityHelper;
 import com.geeks.mylocker.helper.MenuHelper;
 
-public class ListFolderActivity extends ListActivity {
+public class ListFolderActivity extends ListActivity implements BaseActivityHelper {
 
 	protected final String TAG = getClass().getSimpleName();
 	
 	public final static String EXTRA_MESSAGE = "com.geeks.mylocker.groulist.MESSAGE";
 
 	public final static String FOLDER_ID_SELECTED = "com.geeks.mylocker.folder.id.selected";
+	
+	private Config config;
+	
+	private ActivityHelper activityHelper;
 	
 	DataSource ds;
 	Cursor cursor;
@@ -32,6 +39,14 @@ public class ListFolderActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_list);
 		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			config = (Config) extras.getSerializable(Config.CONTEXT);
+		}	
+		
+		activityHelper = new ActivityHelper(this);
+		activityHelper.registerBaseActivityReceiver();
+				
 		ds = new DataSource();
 		ds.setup(this);
 		
@@ -72,6 +87,7 @@ public class ListFolderActivity extends ListActivity {
 		Intent intent = new Intent(this, ListRecordActivity.class);
 		Bundle extras = new Bundle();
 		extras.putLong(FOLDER_ID_SELECTED, id);
+		extras.putSerializable(Config.CONTEXT, config);
 		if(extras !=null) intent.putExtras(extras);
 		this.startActivity(intent);
 	}
@@ -90,6 +106,12 @@ public class ListFolderActivity extends ListActivity {
 		super.onPause();
 		//if(cursor !=null)  cursor.close();
 	}
+	
+	@Override
+    protected void onDestroy() {
+    	super.onDestroy();
+    	activityHelper.unRegisterBaseActivityReceiver();
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,8 +122,24 @@ public class ListFolderActivity extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Bundle extras = null;
-		return MenuHelper.onOptionsItemSelected(item, this, null);
+		Bundle extras = new Bundle();
+		extras.putSerializable(Config.CONTEXT, config);
+		return MenuHelper.onOptionsItemSelected(item, this, extras);
+	}
+
+	@Override
+	public ActivityHelper getActivityHelper() {
+		return this.activityHelper;
+	}
+
+	@Override
+	public Config getConfig() {
+		return this.config;
+	}
+
+	@Override
+	public void setConfig(Config config) {
+		this.config = config;
 	}
 	
 }

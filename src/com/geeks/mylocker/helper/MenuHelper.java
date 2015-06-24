@@ -21,6 +21,7 @@ public class MenuHelper {
 		switch (id) {
 			case R.id.action_add:
 				intent = new Intent(context, AddRecordActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				if(extras !=null) {
 					intent.putExtras(extras);
 				}

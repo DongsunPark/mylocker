@@ -5,7 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
+
+import com.geeks.mylocker.LoginActivity;
 
 public class ActivityHelper {
 	
@@ -49,9 +50,8 @@ public class ActivityHelper {
 		@Override
 		public void onReceive(Context cxt, Intent intent) {
 			if(intent.getAction().equals(FINISH_ALL_ACTIVITIES_ACTIVITY_ACTION)){
-				if(cxt instanceof Activity) ((Activity)cxt).finish();
-				else {
-					Log.e(TAG, "NOT Activity");
+				if(cxt instanceof Activity && !(cxt instanceof LoginActivity)) {
+					((Activity)cxt).finish();
 				}
 			}
 		}

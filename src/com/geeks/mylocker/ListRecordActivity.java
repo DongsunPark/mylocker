@@ -141,6 +141,7 @@ public class ListRecordActivity extends ListActivity implements BaseActivityHelp
 							Toast.makeText(self, record.getName() + " selected", Toast.LENGTH_LONG).show();
 							
 							Intent intent = new Intent(self, ViewRecordActivity.class);
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							Bundle extras = new Bundle();
 							extras.putSerializable(Config.CONTEXT, config);
 							extras.putSerializable(SELECTED_ENTITY, result);

@@ -109,6 +109,7 @@ public class ViewRecordActivity extends AppBaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Bundle extras = new Bundle();
+		extras.putLong(ListFolderActivity.FOLDER_ID_SELECTED, record.getFolderId());
 		extras.putSerializable(Config.CONTEXT, ((ViewRecordActivity)self).getConfig());
 		return MenuHelper.onOptionsItemSelected(item, this, extras);
 	}

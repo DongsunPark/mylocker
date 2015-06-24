@@ -119,4 +119,12 @@ public class LoginActivity extends AppBaseActivity {
         }.execute(); 
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		loginMasterkey.getText().clear();
+	}
+	
+	
+
 }

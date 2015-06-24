@@ -152,6 +152,7 @@ public class AddRecordActivity extends AppBaseActivity {
 					Toast.makeText(AddRecordActivity.this, record.getName() + " added", Toast.LENGTH_LONG).show();
 					
 					Intent intent = new Intent(self, ViewRecordActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					Bundle extras = new Bundle();
 					extras.putSerializable(Config.CONTEXT, ((AddRecordActivity)self).getConfig());
 					extras.putSerializable(ListRecordActivity.SELECTED_ENTITY, result);;

@@ -2,7 +2,7 @@
 <resources>
     <string name="title_activity_add_record">Add Record</string>
     <string name="title_activity_view_record">View Record</string>
-    <string name="title_activity_folder_list">Folder List</string>
+    <string name="title_activity_folder_list">Folders</string>
     <string name="title_activity_record_list">Record List</string>
 
     <string name="app_name">myLocker</string>

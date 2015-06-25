@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -162,10 +163,9 @@ public class AddRecordActivity extends AppBaseActivity {
 			}.execute(commandRecord);
 	}
 	
-	public void addFieldsView(View view) {
+	public void addFieldsView2(View view) {
 		
-		final LinearLayout layout = (LinearLayout)findViewById(R.layout.activity_add_record);
-		
+		LinearLayout layout = (LinearLayout)view.getParent();
 		//LinearLayout child = new LinearLayout(self);
 		
 		/*final RadioButton button2 = new RadioButton(self);
@@ -173,12 +173,14 @@ public class AddRecordActivity extends AppBaseActivity {
 		child.addView(button2);*/
 		
 		final RadioGroup group = new RadioGroup(self);
+		
 		final RadioButton button1 = new RadioButton(self);
 		button1.setId(1234); // this id can be generated as you like.
 		group.addView(button1,
 		    new RadioGroup.LayoutParams(
 		        RadioGroup.LayoutParams.WRAP_CONTENT,    
 		        RadioGroup.LayoutParams.WRAP_CONTENT));
+		
 		final RadioButton button2 = new RadioButton(self);
 		button2.setId(3456); // this id can be generated as you like.
 		button2.setChecked(true);
@@ -186,10 +188,37 @@ public class AddRecordActivity extends AppBaseActivity {
 		    new RadioGroup.LayoutParams(
 		        RadioGroup.LayoutParams.WRAP_CONTENT,    
 		        RadioGroup.LayoutParams.WRAP_CONTENT));
+		
 		layout.addView(group,
 		    new LinearLayout.LayoutParams(
 		        LinearLayout.LayoutParams.MATCH_PARENT,    
 		        LinearLayout.LayoutParams.WRAP_CONTENT));
+		
+		Toast.makeText(self,"test", Toast.LENGTH_LONG).show();
+	}
+	
+	public void addFieldsView(View view) {
+		
+		LinearLayout layout = (LinearLayout)view.getParent();
+		
+		final LinearLayout group = new LinearLayout(self);
+
+		
+		final EditText textField1 = new EditText(self);
+		textField1.setId(1234); // this id can be generated as you like.
+		textField1.setHint("Name");
+		group.addView(textField1);
+
+		final EditText textField2 = new EditText(self);
+		textField2.setId(123412); 
+		textField2.setHint("Value");
+		group.addView(textField2);
+		
+		
+		layout.addView(group,
+				new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.MATCH_PARENT,    
+						LinearLayout.LayoutParams.WRAP_CONTENT));
 		
 		Toast.makeText(self,"test", Toast.LENGTH_LONG).show();
 	}

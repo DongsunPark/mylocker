@@ -41,6 +41,8 @@ public class ViewRecordActivity extends AppBaseActivity {
 			this.setRecord(record);
 		}
 		self = this;
+		
+		this.setTitle(record.getFolder().getName() + " > " + record.getName());
 		updateUi();
 	}
 

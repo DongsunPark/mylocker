@@ -29,6 +29,7 @@ public class MenuHelper {
 				break;
 			case R.id.action_folder_list:
 				intent = new Intent(context, ListFolderActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				if(extras !=null) intent.putExtras(extras);
 				context.startActivity(intent);
 				break;

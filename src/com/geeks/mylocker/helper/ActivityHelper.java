@@ -50,7 +50,7 @@ public class ActivityHelper {
 		@Override
 		public void onReceive(Context cxt, Intent intent) {
 			if(intent.getAction().equals(FINISH_ALL_ACTIVITIES_ACTIVITY_ACTION)){
-				if(cxt instanceof Activity && !(cxt instanceof LoginActivity)) {
+				if(cxt instanceof Activity) {
 					((Activity)cxt).finish();
 				}
 			}

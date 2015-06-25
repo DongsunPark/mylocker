@@ -207,6 +207,8 @@ public class ListRecordActivity extends ListActivity implements BaseActivityHelp
 			this.setFolder(folder);
 		}
 		
+		if(folder !=null) this.setTitle(folder.getName());
+		
 		adapter = this.createListAdapter(folder);
 		this.setListAdapter(adapter);
 		ds.close();

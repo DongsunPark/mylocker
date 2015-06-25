@@ -98,6 +98,7 @@ public class LoginActivity extends AppBaseActivity {
 					config.setMasterKey(result);
 					
 					Intent intent = new Intent(self, ListFolderActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					Bundle extras = new Bundle();
 					extras.putSerializable(Config.CONTEXT, config);
 					if(extras !=null) intent.putExtras(extras);

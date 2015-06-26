@@ -1,6 +1,8 @@
 package com.geeks.mylocker;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,17 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.geeks.mylocker.async.CryptoTask;
 import com.geeks.mylocker.async.DaoCommand;
 import com.geeks.mylocker.async.DaoTask;
 import com.geeks.mylocker.dao.Entity;
+import com.geeks.mylocker.dao.Field;
 import com.geeks.mylocker.dao.Folder;
 import com.geeks.mylocker.dao.Record;
 import com.geeks.mylocker.encrypto.Encryptor;
@@ -28,6 +29,10 @@ import com.geeks.mylocker.helper.MenuHelper;
 import de.greenrobot.dao.AbstractDao;
 
 public class AddRecordActivity extends AppBaseActivity {
+	
+	private final int FIELD_NAME_ID_START = 30000;
+	
+	private final int FIELD_VALUE_ID_START = 40000;
 	
 	protected final String TAG = getClass().getSimpleName();
 	
@@ -41,6 +46,8 @@ public class AddRecordActivity extends AppBaseActivity {
 	String password;
 	
 	Activity self;
+	
+	private int numDynamicField = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +137,10 @@ public class AddRecordActivity extends AppBaseActivity {
              }
          }.doCrypto();  //uses instead of execute() method...its synchronous 
          
-         
+        List<Field> fields = processDynamicFields();
+        
         Record record = new Record(null, recordName, userId, ciphertext, new Date(),folder.getId());
+       
         AbstractDao<Record, Long> dao = ds.getDaoSession().getRecordDao(); 
 		DaoCommand<Record> commandRecord = new DaoCommand<Record>(dao, record, DaoCommand.CRUD.INSERT);
 			
@@ -163,63 +172,57 @@ public class AddRecordActivity extends AppBaseActivity {
 			}.execute(commandRecord);
 	}
 	
-	public void addFieldsView2(View view) {
+	private List<Field> processDynamicFields() {
+
+		List<Field> fields = new ArrayList<Field>();
+		if(this.numDynamicField == 0) return fields;
 		
-		LinearLayout layout = (LinearLayout)view.getParent();
-		//LinearLayout child = new LinearLayout(self);
+		EditText nameEdit = null;
+		EditText valueEdit = null;
 		
-		/*final RadioButton button2 = new RadioButton(self);
-		button2.setChecked(true);
-		child.addView(button2);*/
+		String name =  null;
+		String value = null;
 		
-		final RadioGroup group = new RadioGroup(self);
+		for(int i=0; i < this.numDynamicField; i++) {
+			nameEdit = (EditText)this.findViewById(FIELD_NAME_ID_START + i);
+			valueEdit = (EditText)this.findViewById(FIELD_VALUE_ID_START + i);
+			name = nameEdit.getText().toString();
+			value = valueEdit.getText().toString();
+			if(name !=null && !name.equals("")) {
+				Field field = new Field();
+				field.setName(name);
+				field.setValue(value);
+				field.setPosition(i);
+			}
+		}
 		
-		final RadioButton button1 = new RadioButton(self);
-		button1.setId(1234); // this id can be generated as you like.
-		group.addView(button1,
-		    new RadioGroup.LayoutParams(
-		        RadioGroup.LayoutParams.WRAP_CONTENT,    
-		        RadioGroup.LayoutParams.WRAP_CONTENT));
-		
-		final RadioButton button2 = new RadioButton(self);
-		button2.setId(3456); // this id can be generated as you like.
-		button2.setChecked(true);
-		group.addView(button2,
-		    new RadioGroup.LayoutParams(
-		        RadioGroup.LayoutParams.WRAP_CONTENT,    
-		        RadioGroup.LayoutParams.WRAP_CONTENT));
-		
-		layout.addView(group,
-		    new LinearLayout.LayoutParams(
-		        LinearLayout.LayoutParams.MATCH_PARENT,    
-		        LinearLayout.LayoutParams.WRAP_CONTENT));
-		
-		Toast.makeText(self,"test", Toast.LENGTH_LONG).show();
+		return fields;
 	}
-	
+
 	public void addFieldsView(View view) {
+		
+		this.numDynamicField++;
 		
 		LinearLayout layout = (LinearLayout)view.getParent();
 		
 		final LinearLayout group = new LinearLayout(self);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		params.setMargins(10, 10, 10, 10);
+		group.setLayoutParams(params);
+		group.setOrientation(LinearLayout.VERTICAL);
+		//group.setBackgroundColor(0xff99ccff);
 
 		
-		final EditText textField1 = new EditText(self);
-		textField1.setId(1234); // this id can be generated as you like.
-		textField1.setHint("Name");
-		group.addView(textField1);
+		final EditText nameView = new EditText(self);
+		nameView.setId(FIELD_NAME_ID_START + this.numDynamicField); 
+		nameView.setHint("Name");
+		group.addView(nameView);
 
-		final EditText textField2 = new EditText(self);
-		textField2.setId(123412); 
-		textField2.setHint("Value");
-		group.addView(textField2);
+		final EditText ValueView = new EditText(self);
+		ValueView.setId(FIELD_VALUE_ID_START + this.numDynamicField); 
+		ValueView.setHint("Value");
+		group.addView(ValueView);
 		
-		
-		layout.addView(group,
-				new LinearLayout.LayoutParams(
-						LinearLayout.LayoutParams.MATCH_PARENT,    
-						LinearLayout.LayoutParams.WRAP_CONTENT));
-		
-		Toast.makeText(self,"test", Toast.LENGTH_LONG).show();
+		layout.addView(group, layout.getChildCount()-1);
 	}
 }

@@ -20,11 +20,12 @@
 
         <activity
             android:name=".AddRecordActivity"
+            android:noHistory="true"
             android:label="@string/title_activity_add_record" >
         </activity>
         <activity
             android:name=".ViewRecordActivity"
-            android:label="@string/title_activity_add_record" >
+            android:label="@string/title_activity_view_record" >
         </activity>
         <activity
             android:name=".ListFolderActivity"
@@ -36,7 +37,7 @@
         </activity>
         <activity
             android:name=".ListRecordActivity"
-            android:label="@string/title_activity_folder_list" >
+            android:label="@string/title_activity_record_list" >
         </activity>
         <activity
             android:name=".EncryptionActivity"
@@ -49,7 +50,8 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_folder_list"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
